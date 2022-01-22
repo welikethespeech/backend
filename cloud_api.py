@@ -3,6 +3,7 @@ from math import exp
 import os
 import json
 from google.oauth2 import service_account
+import string
 
 json_str = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')
 json_data = json.loads(json_str)
@@ -86,11 +87,17 @@ def process(entities, categories, sentiment, sentences):
                 break
     sentiment_score += sentiment.score
     for sentence in sentences:
-        words = set(sentence.text.content.split())
-        good_intersection = words.intersection(good_words)
-        bad_intersection = words.intersection(bad_words)
-        if good_intersection or bad_intersection:
-            highlight_sentences[sentence.text.content] = ((len(good_intersection) - len(bad_intersection)) * sentence.sentiment.score) / (len(good_intersection) + len(bad_intersection))
+        text = sentence.text.content.lower().translate(None, string.punctuation)
+        good_count = 0
+        bad_count = 0
+        for phrase in good_words:
+            if phrase in text:
+                good_count += 1
+        for phrase in bad_words:
+            if phrase in text:
+                bad_count += 1
+        if good_count > 0 or bad_count > 0:
+            highlight_sentences[sentence.text.content] = ((good_count - bad_count) * sentence.sentiment.score) / (good_count + bad_count)
     if categories:
         total_score = entities_score * 0.6 + category_score * 0.3 + sentiment_score * 0.1
     else:
