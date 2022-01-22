@@ -14,6 +14,7 @@ import flask
 from flask import Flask, jsonify
 
 from cloud_api import process_text
+from speech import transcribe
 
 app = Flask(__name__)
 limiter = Limiter(
@@ -81,3 +82,21 @@ def api_rankings():
     #         "average_score": sum(scores)/len(scores) if len(scores) > 0 else 0
     #     })
     return jsonify(response_data)
+
+@app.route("/api/transcribe", methods=["POST"])
+@cross_origin()
+def api_transcribe():
+    data = flask.request.json
+    if "url" not in data:
+        return jsonify({"message": "url not provided"}), 400
+    url = data["url"]
+
+    try:
+        transcription_data = transcribe(url)
+        actual_data = transcription_data["channels"][0]["alternatives"][0]
+        return jsonify({
+            "transcription": actual_data["transcript"],
+            "confidence": actual_data["confidence"],
+        })
+    except:
+        return jsonify({"message": "something bad happened"}), 400

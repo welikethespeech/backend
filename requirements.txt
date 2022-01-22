@@ -3,3 +3,5 @@ gunicorn==20.1.0
 google-cloud-language==2.3.2
 flask_cors
 Flask-Limiter
+deepgram-sdk
+yt-dlp
