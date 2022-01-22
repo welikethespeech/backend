@@ -10,6 +10,8 @@ from flask_cors import CORS, cross_origin
 import flask
 from flask import Flask, jsonify
 
+from cloud_api import process_text
+
 app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
@@ -36,7 +38,7 @@ def api_score_speech():
     # do stuff with data[text]
 
     response_data = {
-        "score": random.randint(0, 100)
+        "score": process_text(text)
     }
 
     # cache result
