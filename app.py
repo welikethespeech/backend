@@ -57,6 +57,11 @@ def api_score_speech():
         }), 400
     text = data["text"]
 
+    if len(text) > 2048:
+        return jsonify({
+            "message": "text too long"
+        }), 400
+
     # do stuff with data[text]
 
     response_data = {
