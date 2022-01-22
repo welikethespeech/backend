@@ -109,7 +109,7 @@ def api_transcribe():
         })
     except:
         traceback.print_exc()
-        return jsonify({"message": "a fatal exception occurred"}), 400
+        return jsonify({"message": "A fatal exception occurred. Try using a shorter video"}), 400
 
 @app.route("/api/websitescrape", methods=["POST"])
 @cross_origin()

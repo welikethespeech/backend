@@ -1,3 +1,3 @@
 import speech
 
-print(speech.transcribe("https://youtu.be/6NKctlp7yY0"))
+print(speech.transcribe("https://youtu.be/SCpgKvZB_VQ"))
