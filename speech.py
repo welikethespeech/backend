@@ -29,5 +29,7 @@ def transcribe(url, filepath=None):
 
     if not filepath.is_file():
         os.system(f"yt-dlp --extract-audio --audio-format mp3 -o {filepath} {url}")
-    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+
+    if os.name == "nt":
+        asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
     return asyncio.run(speech_recognition(filepath))

@@ -100,4 +100,5 @@ def api_transcribe():
             "confidence": actual_data["confidence"],
         })
     except:
-        return jsonify({"message": traceback.print_exc()}), 400
+        traceback.print_exc()
+        return jsonify({"message": "a fatal exception occurred"}), 400
