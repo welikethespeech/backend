@@ -44,4 +44,11 @@ def api_score_speech():
 
 @app.route("/api/rankings", methods=["GET"])
 def api_rankings():
-    pass
+    results = database.data.get("results", {})
+    response_data = []
+    for company, scores in results.items():
+        response_data.append({
+            "company": company,
+            "average_score": sum(scores)/len(scores) if len(scores) > 0 else 0
+        })
+    return jsonify(response_data)
