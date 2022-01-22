@@ -15,6 +15,7 @@ from flask import Flask, jsonify
 
 from cloud_api import process_text
 from speech import transcribe
+import traceback
 
 app = Flask(__name__)
 limiter = Limiter(
@@ -99,4 +100,4 @@ def api_transcribe():
             "confidence": actual_data["confidence"],
         })
     except:
-        return jsonify({"message": "something bad happened"}), 400
+        return jsonify({"message": traceback.print_exc()}), 400
