@@ -9,7 +9,7 @@ json_data = json.loads(json_str)
 json_data['private_key'] = json_data['private_key'].replace('\\n', '\n')
 credentials = service_account.Credentials.from_service_account_info(
     json_data)
-client = language_v1.LanguageServiceClient(credentials)
+client = language_v1.LanguageServiceClient(credentials=credentials)
 good_words = set(["environment", "ocean", "trees", "solar power", "wind power", "renewables", "sustainable", "sustainability"])
 bad_words = set(["plastic", "fossil fuel", "fossil fuels", "carbon dioxide", "methane", "waste"])
 
