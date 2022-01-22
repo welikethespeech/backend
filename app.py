@@ -3,6 +3,7 @@ from datetime import datetime
 import db
 from logger import logger
 import json
+import random
 
 import flask
 from flask import Flask, jsonify
@@ -14,5 +15,5 @@ def api_score_speech():
     data = flask.request.json
     # do stuff with data[text]
     return jsonify({
-        "score": 100
+        "score": random.randint(0, 100)
     })
