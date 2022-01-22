@@ -94,6 +94,7 @@ def api_transcribe():
 
     try:
         transcription_data = transcribe(url)
+        logger.debug(f"transcription data get: {transcription_data}")
         actual_data = transcription_data["channels"][0]["alternatives"][0]
         return jsonify({
             "transcription": actual_data["transcript"],
