@@ -25,10 +25,10 @@ def transcribe(url, filepath=None):
     tmp_dir = Path("tmp_speech")
     tmp_dir.mkdir(exist_ok=True)
     if filepath is None:
-        filepath = tmp_dir / (hash256(url) + ".mp3")
+        filepath = tmp_dir / (hash256(url) + ".m4a")
 
     if not filepath.is_file():
-        os.system(f"yt-dlp --extract-audio --audio-format mp3 -o {filepath} {url}")
+        os.system(f"yt-dlp -f wa -x --audio-format m4a --max-filesize 3m -o {filepath} {url}")
 
     if os.name == "nt":
         asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())

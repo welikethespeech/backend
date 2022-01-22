@@ -23,7 +23,7 @@ app = Flask(__name__)
 limiter = Limiter(
     app,
     key_func=get_remote_address,
-    default_limits=["100 per second"]
+    default_limits=["5 per second"]
 )
 
 cors = CORS(app)
@@ -59,9 +59,9 @@ def api_score_speech():
         }), 400
     text = data["text"]
 
-    if len(text) > 2048:
+    if len(text) > 1999:
         return jsonify({
-            "message": "text too long"
+            "message": f"text too long -- {len(text)}"
         }), 400
 
     # do stuff with data[text]
