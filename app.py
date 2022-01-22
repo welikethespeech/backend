@@ -46,7 +46,7 @@ def api_score_speech():
     # do stuff with data[text]
 
     response_data = {
-        "score": process_text(text)
+        "score": round(process_text(text), 2)
     }
 
     # cache result
