@@ -76,6 +76,7 @@ def process_text(text): # Returns score from 0-100 representing sustainability
     #sentiment, sentences = analyze_sentiment(text)
     entities_score = 0
     category_score = 0
+    total_entities_counted = 0
     for entity in entities:
         name = entity.name
         sentiment = entity.sentiment
@@ -83,9 +84,11 @@ def process_text(text): # Returns score from 0-100 representing sustainability
         entity_mag = sentiment.magnitude
         if name in good_words:
             entities_score += entity_score
+            total_entities_counted += 1
         elif name in bad_words:
             entities_score -= entity_score
-    entities_score /= len(entities)
+            total_entities_counted += 1
+    entities_score = entities_score / total_entities_counted
     entities_score = ((entities_score / 2) + 1) * 100
     if categories:
         for category in categories:
