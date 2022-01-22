@@ -17,6 +17,8 @@ from cloud_api import process_text
 from speech import transcribe
 import traceback
 
+from websitescrape import scrape
+
 app = Flask(__name__)
 limiter = Limiter(
     app,
@@ -104,6 +106,24 @@ def api_transcribe():
         return jsonify({
             "transcription": actual_data["transcript"],
             "confidence": actual_data["confidence"],
+        })
+    except:
+        traceback.print_exc()
+        return jsonify({"message": "a fatal exception occurred"}), 400
+
+@app.route("/api/websitescrape", methods=["POST"])
+@cross_origin()
+def api_websitescrape():
+    data = flask.request.json
+    if "url" not in data:
+        return jsonify({"message": "url not provided"}), 400
+    url = data["url"]
+
+    try:
+        scraped_data = scrape(url)
+        logger.debug(f"website scrape data get: {scraped_data}")
+        return jsonify({
+            "scraped": scraped_data
         })
     except:
         traceback.print_exc()

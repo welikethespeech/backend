@@ -1,7 +1,8 @@
-Flask==2.0.2
-gunicorn==20.1.0
-google-cloud-language==2.3.2
+Flask
+gunicorn
+google-cloud-language
 flask_cors
 Flask-Limiter
 deepgram-sdk
 yt-dlp
+trafilatura
