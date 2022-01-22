@@ -65,7 +65,7 @@ def process(entities, categories, sentiment, sentences):
     category_score = 0
     sentiment_score = 0
     total_entities_counted = 0
-    highlight_words = {}
+    highlight_sentences = {}
     for entity in entities:
         name = entity.name.lower()
         sentiment = entity.sentiment
@@ -86,11 +86,17 @@ def process(entities, categories, sentiment, sentences):
                 category_score += 200/3
                 break
     sentiment_score += sentiment.score
+    for sentence in sentences:
+        words = set(sentence.text.content.split())
+        good_intersection = words.intersection(good_words)
+        bad_intersection = words.intersection(bad_words)
+        if good_intersection or bad_intersection:
+            highlight_sentences[sentence.text.content] = ((len(good_intersection) - len(bad_intersection)) * sentence.sentiment.score) / (len(good_intersection) + len(bad_intersection))
     if categories:
         total_score = entities_score * 0.6 + category_score * 0.3 + sentiment_score * 0.1
     else:
         total_score = entities_score * 0.9 + sentiment_score * 0.1
-    return total_score
+    return {"score": total_score, "highlighted": highlight_sentences}
 
 def process_text(text): # Returns score from 0-100 representing sustainability
     type = language_v1.Document.Type.PLAIN_TEXT

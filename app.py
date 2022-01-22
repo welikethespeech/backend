@@ -65,9 +65,10 @@ def api_score_speech():
         }), 400
 
     # do stuff with data[text]
-
+    processed = process_text(text)
     response_data = {
-        "score": round(process_text(text), 2)
+        "score": round(processed["score"], 2),
+        "highlighted": processed["highlighted"]
     }
 
     # cache result
