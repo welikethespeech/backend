@@ -79,7 +79,6 @@ def process(entities, categories, sentiment, sentences):
             total_entities_counted += 1
     if total_entities_counted > 0:
         entities_score = entities_score / total_entities_counted
-    entities_score = entities_score * 100
     if categories:
         for category in categories:
             if category.confidence > 0.5 and category.name in environment_categories:
