@@ -11,8 +11,8 @@ credentials = service_account.Credentials.from_service_account_info(
     json_data)
 client = language_v1.LanguageServiceClient(credentials=credentials)
 
-good_words = set(["environment", "ocean", "trees", "solar power", "wind power", "renewables", "sustainable", "sustainability", "tidal", "solar", "wind", "earth"])
-bad_words = set(["plastic", "fossil fuel", "fossil fuels", "carbon dioxide", "methane", "waste", "oil", "petrol", ""])
+good_words = set(["environment", "ocean", "trees", "solar power", "wind power", "renewables", "sustainable", "sustainability", "tidal", "solar", "wind", "earth", "air", "forest", "forests", "rainforest", "rainforests", "plant", "plants", "healthy", "grasslands", "clean energy", "water", "hydro", "nuclear"])
+bad_words = set(["plastic", "fossil fuel", "fossil fuels", "carbon dioxide", "methane", "waste", "oil", "petrol", "pollution", "coal", "deforestation", "global warming", "greenhouse gas", "greenhouse gases"])
 environment_categories = set(["/Science/Ecology & Environment", "/Science/Ecology & Environment/Climate Change & Global Warming", "/People & Society/Social Issues & Advocacy/Green Living & Environmental Issues"])
 
 def analyze_entity_sentiment(text_content, type_):
@@ -65,6 +65,7 @@ def process(entities, categories, sentiment, sentences):
     category_score = 0
     sentiment_score = 0
     total_entities_counted = 0
+    highlight_words = {}
     for entity in entities:
         name = entity.name.lower()
         sentiment = entity.sentiment
