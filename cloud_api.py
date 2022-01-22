@@ -1,6 +1,7 @@
 from google.cloud import language_v1
 from math import exp
 import os
+import json
 
 json_str = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')
 json_data = json.loads(json_str)
