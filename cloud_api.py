@@ -87,7 +87,7 @@ def process(entities, categories, sentiment, sentences):
                 break
     sentiment_score += sentiment.score
     for sentence in sentences:
-        text = sentence.text.content.lower().translate(None, string.punctuation)
+        text = sentence.text.content.lower().translate(str.maketrans('', '', string.punctuation))
         good_count = 0
         bad_count = 0
         for phrase in good_words:
