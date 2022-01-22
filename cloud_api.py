@@ -73,12 +73,13 @@ def process_text(text): # Returns score from 0-100 representing sustainability
         categories = classify_text(text)
     except:
         categories = None
-    #sentiment, sentences = analyze_sentiment(text)
+    sentiment, sentences = analyze_sentiment(text)
     entities_score = 0
     category_score = 0
+    sentiment_score = 0
     total_entities_counted = 0
     for entity in entities:
-        name = entity.name
+        name = entity.name.lower()
         sentiment = entity.sentiment
         entity_score = sentiment.score
         entity_mag = sentiment.magnitude
@@ -90,14 +91,15 @@ def process_text(text): # Returns score from 0-100 representing sustainability
             total_entities_counted += 1
     if total_entities_counted > 0:
         entities_score = entities_score / total_entities_counted
-    entities_score = ((entities_score / 2) + 0.5) * 100
+    entities_score = entities_score * 100
     if categories:
         for category in categories:
             if category.confidence > 0.5 and category.name in environment_categories:
                 category_score += 200/3
                 break
+    sentiment_score += sentiment.score
     if categories:
-        total_score = entities_score * 0.7 + category_score * 0.3
+        total_score = entities_score * 0.6 + category_score * 0.3 + sentiment_score * 0.1
     else:
-        total_score = entities_score
+        total_score = entities_score * 0.9 + sentiment_score * 0.1
     return total_score
