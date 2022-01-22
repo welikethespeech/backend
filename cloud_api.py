@@ -88,8 +88,9 @@ def process_text(text): # Returns score from 0-100 representing sustainability
         elif name in bad_words:
             entities_score -= entity_score
             total_entities_counted += 1
-    entities_score = entities_score / total_entities_counted
-    entities_score = ((entities_score / 2) + 1) * 100
+    if total_entities_counted > 0:
+        entities_score = entities_score / total_entities_counted
+    entities_score = ((entities_score / 2) + 0.5) * 100
     if categories:
         for category in categories:
             if category.confidence > 0.5 and category.name in environment_categories:
