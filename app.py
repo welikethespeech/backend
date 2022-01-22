@@ -50,6 +50,7 @@ def api_score_speech():
 @app.route("/api/rankings", methods=["GET"])
 @cross_origin()
 def api_rankings():
+    database.load_from_file()
     response_data = database.data.get("results", {})
     # response_data = []
     # for company, scores in results.items():
