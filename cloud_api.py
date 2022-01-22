@@ -10,8 +10,10 @@ json_data['private_key'] = json_data['private_key'].replace('\\n', '\n')
 credentials = service_account.Credentials.from_service_account_info(
     json_data)
 client = language_v1.LanguageServiceClient(credentials=credentials)
+
 good_words = set(["environment", "ocean", "trees", "solar power", "wind power", "renewables", "sustainable", "sustainability"])
 bad_words = set(["plastic", "fossil fuel", "fossil fuels", "carbon dioxide", "methane", "waste"])
+environment_categories = set(["/Science/Ecology & Environment", "/Science/Ecology & Environment/Climate Change & Global Warming", "/People & Society/Social Issues & Advocacy/Green Living & Environmental Issues"])
 
 def analyze_entity_sentiment(text_content):
     """
@@ -67,14 +69,23 @@ def analyze_sentiment(text_content):
 
 def process_text(text): # Returns score from 0-100 representing sustainability
     entities = analyze_entity_sentiment(text)
-    temp_score = 0
+    categories = classify_text(text)
+    #sentiment, sentences = analyze_sentiment(text)
+    entities_score = 0
+    category_score = 0
     for entity in entities:
         name = entity.name
         sentiment = entity.sentiment
         entity_score = sentiment.score
         entity_mag = sentiment.magnitude
         if name in good_words:
-            temp_score += entity_score
+            entities_score += entity_score
         elif name in bad_words:
-            temp_score -= entity_score
-    return 100/(1+exp(-temp_score))
+            entities_score -= entity_score
+    entities_score = 100/(1+exp(-entities_score))
+    for category in categories:
+        if category.confidence > 0.5 and category.name in environment_categories:
+            category_score += 100/3
+            break
+    total_score = entities_score * 0.7 + category_score * 0.3
+    return total_score
