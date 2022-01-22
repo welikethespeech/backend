@@ -11,7 +11,7 @@ credentials = service_account.Credentials.from_service_account_info(
     json_data)
 client = language_v1.LanguageServiceClient(credentials=credentials)
 
-good_words = set(["environment", "ocean", "trees", "solar power", "wind power", "renewables", "sustainable", "sustainability", "tidal", "solar", "wind", "earth", "air", "forest", "forests", "rainforest", "rainforests", "plant", "plants", "healthy", "grasslands", "clean energy", "water", "hydro", "nuclear"])
+good_words = set(["environment", "ocean", "trees", "solar power", "wind power", "renewables", "sustainable", "sustainability", "tidal", "solar", "wind", "earth", "air", "forest", "forests", "rainforest", "rainforests", "plant", "plants", "healthy", "grasslands", "clean energy", "water", "hydro", "nuclear", "tree", "renewable", "renewable energy"])
 bad_words = set(["plastic", "fossil fuel", "fossil fuels", "carbon dioxide", "methane", "waste", "oil", "petrol", "pollution", "coal", "deforestation", "global warming", "greenhouse gas", "greenhouse gases", "fracking"])
 environment_categories = set(["/Science/Ecology & Environment", "/Science/Ecology & Environment/Climate Change & Global Warming", "/People & Society/Social Issues & Advocacy/Green Living & Environmental Issues"])
 
