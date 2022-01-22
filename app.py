@@ -4,6 +4,8 @@ from db import Database
 from logger import logger
 import json
 import random
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 from flask_cors import CORS
 from flask_cors import CORS, cross_origin
 
@@ -11,6 +13,12 @@ import flask
 from flask import Flask, jsonify
 
 app = Flask(__name__)
+limiter = Limiter(
+    app,
+    key_func=get_remote_address,
+    default_limits=["1 per second"]
+)
+
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 database = Database()
