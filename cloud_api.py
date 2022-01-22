@@ -69,9 +69,9 @@ def analyze_sentiment(text_content):
 
 def process_text(text): # Returns score from 0-100 representing sustainability
     entities = analyze_entity_sentiment(text)
-    if len(text.split(" ")) > 20:
+    try:
         categories = classify_text(text)
-    else:
+    except:
         categories = None
     #sentiment, sentences = analyze_sentiment(text)
     entities_score = 0
