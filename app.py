@@ -4,14 +4,19 @@ from db import Database
 from logger import logger
 import json
 import random
+from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 
 import flask
 from flask import Flask, jsonify
 
 app = Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 database = Database()
 
 @app.route("/api/score-speech", methods=["POST"])
+@cross_origin()
 def api_score_speech():
     data = flask.request.json
 
@@ -43,6 +48,7 @@ def api_score_speech():
     return jsonify(response_data)
 
 @app.route("/api/rankings", methods=["GET"])
+@cross_origin()
 def api_rankings():
     response_data = database.data.get("results", {})
     # response_data = []
