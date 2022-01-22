@@ -18,7 +18,7 @@ app = Flask(__name__)
 limiter = Limiter(
     app,
     key_func=get_remote_address,
-    default_limits=["1 per second"]
+    default_limits=["100 per second"]
 )
 
 cors = CORS(app)
