@@ -11,8 +11,8 @@ credentials = service_account.Credentials.from_service_account_info(
     json_data)
 client = language_v1.LanguageServiceClient(credentials=credentials)
 
-good_words = set(["environment", "ocean", "trees", "solar power", "wind power", "renewables", "sustainable", "sustainability"])
-bad_words = set(["plastic", "fossil fuel", "fossil fuels", "carbon dioxide", "methane", "waste"])
+good_words = set(["environment", "ocean", "trees", "solar power", "wind power", "renewables", "sustainable", "sustainability", "tidal", "solar", "wind"])
+bad_words = set(["plastic", "fossil fuel", "fossil fuels", "carbon dioxide", "methane", "waste", "oil", "petrol", ""])
 environment_categories = set(["/Science/Ecology & Environment", "/Science/Ecology & Environment/Climate Change & Global Warming", "/People & Society/Social Issues & Advocacy/Green Living & Environmental Issues"])
 
 def analyze_entity_sentiment(text_content):
@@ -69,7 +69,10 @@ def analyze_sentiment(text_content):
 
 def process_text(text): # Returns score from 0-100 representing sustainability
     entities = analyze_entity_sentiment(text)
-    categories = classify_text(text)
+    if len(text.split(" ")) > 20:
+        categories = classify_text(text)
+    else:
+        categories = None
     #sentiment, sentences = analyze_sentiment(text)
     entities_score = 0
     category_score = 0
@@ -83,9 +86,13 @@ def process_text(text): # Returns score from 0-100 representing sustainability
         elif name in bad_words:
             entities_score -= entity_score
     entities_score = 100/(1+exp(-entities_score))
-    for category in categories:
-        if category.confidence > 0.5 and category.name in environment_categories:
-            category_score += 100/3
-            break
-    total_score = entities_score * 0.7 + category_score * 0.3
+    if categories:
+        for category in categories:
+            if category.confidence > 0.5 and category.name in environment_categories:
+                category_score += 200/3
+                break
+    if categories:
+        total_score = entities_score * 0.7 + category_score * 0.3
+    else:
+        total_score = entity_score
     return total_score
