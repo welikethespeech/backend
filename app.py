@@ -1,5 +1,6 @@
 from datetime import datetime
 
+import string
 from db import Database
 from logger import logger
 import json
@@ -35,7 +36,18 @@ def api_score_speech():
         return jsonify({
             "message": "company not provided"
         }), 400
-    company = data["company"]
+    company = data["company"].strip().lower()
+
+    # check if company is valid string
+    if not all([(c in string.ascii_letters + string.digits + " ") for c in company]):
+        return jsonify({
+            "message": "invalid company name, please only use letters, digits and spaces"
+        }), 400
+
+    if len(company) <= 0:
+        return jsonify({
+            "message": "company not provided"
+        }), 400
 
     if "text" not in data:
         return jsonify({
