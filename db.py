@@ -13,4 +13,4 @@ class Database:
 
     def save_to_file(self):
         with open(self.path, "w") as f:
-            json.dump(self.data, f)
+            json.dump(self.data, f) # dump
