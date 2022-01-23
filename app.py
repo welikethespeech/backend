@@ -10,6 +10,8 @@ from flask_limiter.util import get_remote_address
 from flask_cors import CORS
 from flask_cors import CORS, cross_origin
 
+import os
+
 import flask
 from flask import Flask, jsonify
 
@@ -139,3 +141,14 @@ def api_websitescrape():
     except:
         traceback.print_exc()
         return jsonify({"message": "a fatal exception occurred"}), 400
+
+@app.route("/api/nuke", methods=["POST"])
+@cross_origin()
+def api_nuke():
+    target_code = os.environ.get('SECRET_KEY')
+    data = flask.request.json
+    if "SECRET_KEY" in data:
+        secret = data["SECRET_KEY"]
+        if secret = target_code:
+            return jsonify({"message": "nuking test works"})
+    
