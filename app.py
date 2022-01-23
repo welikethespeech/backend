@@ -2,7 +2,6 @@ from datetime import datetime
 
 import string
 
-from django.forms import NullBooleanField
 from db import Database
 from logger import logger
 import json
