@@ -103,9 +103,9 @@ def process(entities, categories, sentiment, sentences):
     if sentiment_count > 0:
         sentiment_score = sentiment_score / sentiment_count
     if categories:
-        total_score = entities_score * 0.4 + category_score * 0.3 + sentiment_score * 0.3
+        total_score = entities_score * 0.3 + category_score * 0.2 + sentiment_score * 0.5
     else:
-        total_score = entities_score * 0.7 + sentiment_score * 0.3
+        total_score = entities_score * 0.5 + sentiment_score * 0.5
     return {"score": total_score, "highlighted": highlight_sentences}
 
 def process_text(text): # Returns score from 0-100 representing sustainability
