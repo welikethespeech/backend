@@ -149,6 +149,6 @@ def api_nuke():
     data = flask.request.json
     if "SECRET_KEY" in data:
         secret = data["SECRET_KEY"]
-        if secret = target_code:
+        if secret == target_code:
             return jsonify({"message": "nuking test works"})
     
