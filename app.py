@@ -106,7 +106,7 @@ def api_rankings():
         })
 
     response_data = list(
-        sorted(response_data, key=lambda elm: elm["average_score"]))
+        sorted(response_data, reverse=True, key=lambda elm: elm["average_score"]))
     return jsonify(response_data)
 
 
