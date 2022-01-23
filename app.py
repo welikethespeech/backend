@@ -83,13 +83,16 @@ def api_score_speech():
 @cross_origin()
 def api_rankings():
     database.load_from_file()
-    response_data = database.data.get("results", {})
-    # response_data = []
-    # for company, scores in results.items():
-    #     response_data.append({
-    #         "company": company,
-    #         "average_score": sum(scores)/len(scores) if len(scores) > 0 else 0
-    #     })
+    # response_data = database.data.get("results", {})
+    results = database.data.get("results", {})
+    response_data = []
+    for company, scores in results.items():
+        response_data.append({
+            "company": company,
+            "average_score": sum(scores)/len(scores) if len(scores) > 0 else 0
+        })
+
+    response_data = list(sorted(response_data, key=lambda elm: elm.average_score))
     return jsonify(response_data)
 
 @app.route("/api/transcribe", methods=["POST"])
