@@ -156,7 +156,7 @@ def api_nuke():
 
 @app.route("/api/delete", methods=["POST"])
 @cross_origin()
-def api_nuke():
+def api_delete():
     target_code = os.environ.get('SECRET_KEY')
     data = flask.request.json
     if "SECRET_KEY" in data:
