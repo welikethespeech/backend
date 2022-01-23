@@ -92,7 +92,7 @@ def api_rankings():
             "average_score": sum(scores)/len(scores) if len(scores) > 0 else 0
         })
 
-    response_data = list(sorted(response_data, key=lambda elm: elm.average_score))
+    response_data = list(sorted(response_data, key=lambda elm: elm["average_score"]))
     return jsonify(response_data)
 
 @app.route("/api/transcribe", methods=["POST"])
