@@ -1,6 +1,8 @@
 from datetime import datetime
 
 import string
+
+from django.forms import NullBooleanField
 from db import Database
 from logger import logger
 import json
@@ -31,6 +33,7 @@ limiter = Limiter(
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 database = Database()
+
 
 @app.route("/api/score-speech", methods=["POST"])
 @cross_origin()
@@ -82,11 +85,13 @@ def api_score_speech():
 
     # cache result
     results_dict = database.data.get("results", {})
-    results_dict[company] = results_dict.get(company, []) + [response_data["score"]]
+    results_dict[company] = results_dict.get(
+        company, []) + [response_data["score"]]
     database.data["results"] = results_dict
     database.save_to_file()
 
     return jsonify(response_data)
+
 
 @app.route("/api/rankings", methods=["GET"])
 @cross_origin()
@@ -101,8 +106,10 @@ def api_rankings():
             "average_score": sum(scores)/len(scores) if len(scores) > 0 else 0
         })
 
-    response_data = list(sorted(response_data, key=lambda elm: elm["average_score"]))
+    response_data = list(
+        sorted(response_data, key=lambda elm: elm["average_score"]))
     return jsonify(response_data)
+
 
 @app.route("/api/transcribe", methods=["POST"])
 @cross_origin()
@@ -124,6 +131,7 @@ def api_transcribe():
         traceback.print_exc()
         return jsonify({"message": "A fatal exception occurred. Try using a shorter video"}), 400
 
+
 @app.route("/api/websitescrape", methods=["POST"])
 @cross_origin()
 def api_websitescrape():
@@ -142,6 +150,7 @@ def api_websitescrape():
         traceback.print_exc()
         return jsonify({"message": "a fatal exception occurred"}), 400
 
+
 @app.route("/api/nuke", methods=["POST"])
 @cross_origin()
 def api_nuke():
@@ -154,6 +163,7 @@ def api_nuke():
             database.save_to_file()
             return jsonify({"message": "nuked"})
 
+
 @app.route("/api/delete", methods=["POST"])
 @cross_origin()
 def api_delete():
@@ -162,8 +172,7 @@ def api_delete():
     if "SECRET_KEY" in data:
         secret = data.get("SECRET_KEY")
         company = data.get("company")
-        if secret == target_code and company in database.data:
-            database.data.pop(company)
+        if secret == target_code and company in database.data.get("results", {}):
+            database.data["results"].pop(company)
             database.save_to_file()
             return jsonify({"message": "deleted " + company})
-    
