@@ -67,6 +67,7 @@ def api_score_speech():
     # do stuff with data[text]
     cached_processed = database.data.get("processed", {})
     if text in cached_processed:
+        print("Picked up from cache.")
         response_data = cached_processed.get(text, {})
     else:
         processed = process_text(text)
