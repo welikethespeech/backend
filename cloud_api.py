@@ -83,7 +83,7 @@ def process(entities, categories, sentiment, sentences):
     if categories:
         for category in categories:
             if category.confidence > 0.5 and category.name in environment_categories:
-                category_score += 200/3
+                category_score += 2/3
                 break
     sentiment_count = 0
     sentiment_score += sentiment.score
