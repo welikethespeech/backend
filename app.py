@@ -148,7 +148,22 @@ def api_nuke():
     target_code = os.environ.get('SECRET_KEY')
     data = flask.request.json
     if "SECRET_KEY" in data:
-        secret = data["SECRET_KEY"]
+        secret = data.get("SECRET_KEY")
         if secret == target_code:
-            return jsonify({"message": "nuking test works"})
+            database.data = {}
+            database.save_to_file()
+            return jsonify({"message": "nuked"})
+
+@app.route("/api/delete", methods=["POST"])
+@cross_origin()
+def api_nuke():
+    target_code = os.environ.get('SECRET_KEY')
+    data = flask.request.json
+    if "SECRET_KEY" in data:
+        secret = data.get("SECRET_KEY")
+        company = data.get("company")
+        if secret == target_code and company in database.data:
+            database.data.pop(company)
+            database.save_to_file()
+            return jsonify({"message": "deleted " + company})
     
