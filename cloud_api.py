@@ -86,17 +86,16 @@ def process(entities, categories, sentiment, sentences):
                 category_score += 2/3
                 break
     sentiment_count = 0
-    sentiment_score += sentiment.score
     for sentence in sentences:
         text = sentence.text.content.lower().translate(str.maketrans('', '', string.punctuation))
         good_count = 0
         bad_count = 0
         for phrase in good_words:
-            if phrase in text:
-                good_count += 1
+            good_count += text.count(phrase)
+            text = text.replace(phrase, "")
         for phrase in bad_words:
-            if phrase in text:
-                bad_count += 1
+            bad_count += text.count(phrase)
+            text = text.replace(phrase, "")
         if good_count > 0 or bad_count > 0:
             sentiment_count += 1
             highlight_sentences[sentence.text.content] = ((good_count - bad_count) * sentence.sentiment.score) / (good_count + bad_count)
