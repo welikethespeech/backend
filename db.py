@@ -5,6 +5,7 @@ class Database:
     def __init__(self, path="data.json"):
         self.path = path
         self.data = {}
+        self.load_from_file()
 
     def load_from_file(self):
         if os.path.isfile(self.path):

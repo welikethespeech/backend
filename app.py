@@ -175,3 +175,25 @@ def api_delete():
             database.data["results"].pop(company)
             database.save_to_file()
             return jsonify({"message": "deleted " + company})
+
+@app.route("/api/setdb", methods=["POST"])
+@cross_origin()
+def api_setdb():
+    target_code = os.environ.get('SECRET_KEY')
+    data = flask.request.json
+    if "SECRET_KEY" in data:
+        secret = data.get("SECRET_KEY")
+        if secret == target_code:
+            database.data = data.get("database", {})
+            database.save_to_file()
+            return jsonify({"message": "set", "database_data": database.data})
+
+@app.route("/api/getdb", methods=["GET"])
+@cross_origin()
+def api_getdb():
+    target_code = os.environ.get('SECRET_KEY')
+    data = flask.request.json
+    if "SECRET_KEY" in data:
+        secret = data.get("SECRET_KEY")
+        if secret == target_code:
+            return jsonify({"message": "set", "database_data": database.data})
