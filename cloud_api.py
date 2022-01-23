@@ -4,6 +4,7 @@ import os
 import json
 from google.oauth2 import service_account
 import string
+import random
 
 json_str = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')
 json_data = json.loads(json_str)
@@ -12,7 +13,7 @@ credentials = service_account.Credentials.from_service_account_info(
     json_data)
 client = language_v1.LanguageServiceClient(credentials=credentials)
 
-good_words = set(["environment", "ocean", "trees", "solar power", "wind power", "renewables", "sustainable", "sustainability", "tidal", "solar", "wind", "earth", "air", "forest", "forests", "rainforest", "rainforests", "plant", "plants", "healthy", "grasslands", "clean energy", "water", "hydro", "nuclear", "tree", "renewable", "renewable energy"])
+good_words = set(["environment", "ocean", "trees", "solar power", "wind power", "renewables", "sustainable", "sustainability", "tidal", "solar", "wind", "earth", "air", "forest", "forests", "rainforest", "rainforests", "plant", "plants", "healthy", "grasslands", "clean energy", "water", "hydro", "nuclear", "tree", "renewable", "renewable energy", "planet", "world"])
 bad_words = set(["plastic", "fossil fuel", "fossil fuels", "carbon dioxide", "methane", "waste", "oil", "petrol", "pollution", "coal", "deforestation", "global warming", "greenhouse gas", "greenhouse gases", "fracking"])
 environment_categories = set(["/Science/Ecology & Environment", "/Science/Ecology & Environment/Climate Change & Global Warming", "/People & Society/Social Issues & Advocacy/Green Living & Environmental Issues"])
 
@@ -72,6 +73,8 @@ def process(entities, categories, sentiment, sentences):
         sentiment = entity.sentiment
         entity_score = sentiment.score
         entity_mag = sentiment.magnitude
+        if entity_score == 0:
+            entity_score = 0.5
         if name in good_words:
             entities_score += entity_score
             total_entities_counted += 1
@@ -88,6 +91,9 @@ def process(entities, categories, sentiment, sentences):
     sentiment_count = 0
     for sentence in sentences:
         text = sentence.text.content.lower().translate(str.maketrans('', '', string.punctuation))
+        sentence_score = sentence.sentiment.score
+        if sentence_score == 0:
+            sentence_score = random.randrange(0.4, 0.7)
         good_count = 0
         bad_count = 0
         for phrase in good_words:
@@ -98,14 +104,14 @@ def process(entities, categories, sentiment, sentences):
             text = text.replace(phrase, "")
         if good_count > 0 or bad_count > 0:
             sentiment_count += 1
-            highlight_sentences[sentence.text.content] = ((good_count - bad_count) * sentence.sentiment.score) / (good_count + bad_count)
+            highlight_sentences[sentence.text.content] = ((good_count - bad_count) * sentence_score) / (good_count + bad_count)
             sentiment_score += highlight_sentences[sentence.text.content]
     if sentiment_count > 0:
         sentiment_score = sentiment_score / sentiment_count
     if categories:
-        total_score = entities_score * 0.3 + category_score * 0.2 + sentiment_score * 0.5
+        total_score = entities_score * 0.2 + category_score * 0.2 + sentiment_score * 0.6
     else:
-        total_score = entities_score * 0.5 + sentiment_score * 0.5
+        total_score = entities_score * 0.25 + sentiment_score * 0.75
     return {"score": total_score, "highlighted": highlight_sentences}
 
 def process_text(text): # Returns score from 0-100 representing sustainability
