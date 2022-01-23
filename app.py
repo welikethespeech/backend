@@ -65,11 +65,17 @@ def api_score_speech():
         }), 400
 
     # do stuff with data[text]
-    processed = process_text(text)
-    response_data = {
-        "score": round(processed["score"], 2),
-        "highlighted": processed["highlighted"]
-    }
+    cached_processed = database.data.get("processed", {})
+    if text in cached_processed:
+        response_data = cached_processed.get(text, {})
+    else:
+        processed = process_text(text)
+        response_data = {
+            "score": round(processed["score"], 2),
+            "highlighted": processed["highlighted"]
+        }
+        database.data.get("processed", {})[text] = response_data
+        database.save_to_file()
 
     # cache result
     results_dict = database.data.get("results", {})
