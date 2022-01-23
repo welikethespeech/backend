@@ -85,6 +85,7 @@ def process(entities, categories, sentiment, sentences):
             if category.confidence > 0.5 and category.name in environment_categories:
                 category_score += 200/3
                 break
+    sentiment_count = 0
     sentiment_score += sentiment.score
     for sentence in sentences:
         text = sentence.text.content.lower().translate(str.maketrans('', '', string.punctuation))
@@ -97,11 +98,15 @@ def process(entities, categories, sentiment, sentences):
             if phrase in text:
                 bad_count += 1
         if good_count > 0 or bad_count > 0:
+            sentiment_count += 1
             highlight_sentences[sentence.text.content] = ((good_count - bad_count) * sentence.sentiment.score) / (good_count + bad_count)
+            sentiment_score += highlight_sentences[sentence.text.content]
+    if sentiment_count > 0:
+        sentiment_score = sentiment_score / sentiment_count
     if categories:
-        total_score = entities_score * 0.6 + category_score * 0.3 + sentiment_score * 0.1
+        total_score = entities_score * 0.4 + category_score * 0.3 + sentiment_score * 0.3
     else:
-        total_score = entities_score * 0.9 + sentiment_score * 0.1
+        total_score = entities_score * 0.7 + sentiment_score * 0.3
     return {"score": total_score, "highlighted": highlight_sentences}
 
 def process_text(text): # Returns score from 0-100 representing sustainability
